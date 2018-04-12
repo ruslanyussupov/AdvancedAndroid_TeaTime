@@ -17,10 +17,15 @@
 package com.example.android.teatime;
 
 
+import android.support.test.espresso.Espresso;
+import android.support.test.espresso.IdlingRegistry;
 import android.support.test.espresso.IdlingResource;
+import android.support.test.espresso.action.ViewActions;
+import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -62,22 +67,30 @@ public class IdlingResourceMenuActivityTest {
     private IdlingResource mIdlingResource;
 
 
-    // TODO (6) Registers any resource that needs to be synchronized with Espresso before
+    // COMPLETED (6) Registers any resource that needs to be synchronized with Espresso before
     // the test is run.
     @Before
     public void registerIdlingResource() {
 
+        mIdlingResource = mActivityTestRule.getActivity().getIdlingResource();
+        IdlingRegistry.getInstance().register(mIdlingResource);
+
     }
 
-    // TODO (7) Test that the gridView with Tea objects appears and we can click a gridView item
+    // COMPLETED (7) Test that the gridView with Tea objects appears and we can click a gridView item
     @Test
     public void idlingResourceTest() {
 
+        Espresso.onData(Matchers.anything())
+                .inAdapterView(ViewMatchers.withId(R.id.tea_grid_view))
+                .atPosition(3)
+                .perform(ViewActions.click());
+
     }
 
-    // TODO (8) Unregister resources when not needed to avoid malfunction
+    // COMPLETED (8) Unregister resources when not needed to avoid malfunction
     @After
     public void unregisterIdlingResource() {
-
+        IdlingRegistry.getInstance().unregister(mIdlingResource);
     }
 }
